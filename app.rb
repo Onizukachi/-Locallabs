@@ -1,8 +1,8 @@
 require 'mysq12'
 
-hh = {name: "Village Clerk/East Hazel Crest", name: "Mayor/Posen", name: "School Board Rep", name:  "Twp Hwy Commissioner/Grafton Twp",
-    name: "County Recorder/Bond County", name: "County Sheriff/Kankakee County", name: "State Representative 13th District",
-    name: "Judge, Resident Circuit Court/Shelby Cou"}
+#hh = {name: "Village Clerk/East Hazel Crest", name: "Mayor/Posen", name: "School Board Rep", name:  "Twp Hwy Commissioner/Grafton Twp",
+ #   name: "County Recorder/Bond County", name: "County Sheriff/Kankakee County", name: "State Representative 13th District",
+ #   name: "Judge, Resident Circuit Court/Shelby Cou"}
 
 #Метод для случая когда в строке только запятая
 def only_comma sentence
@@ -35,16 +35,16 @@ def slash_only sentence
 end
 
 #Если имеется сокращения: Twp, Hwy, Highway highway  and Hwy hwy
-def transformation sentence
-    example = {"Twp" => "Township", "Hwy" => "Highway", "Highway highway" => "Highway", "Hwy hwy" => "Highway" }
-
-    example.each_key |key| do
-        if sentence.include(key)
-            ready = sentence.gsub(key, example[key])
-            return ready
-        end
-    end  
-end
+#def transformation sentence
+ #   example = {"Twp" => "Township", "Hwy" => "Highway", "Highway highway" => "Highway", "Hwy hwy" => "Highway" }
+#
+ #   example.each_key |key| do
+  #      if sentence.include?(key)
+   #         ready = sentence.gsub(key, example[key])
+    #        return ready
+   # #    end
+  #  end  
+#end
 
 #Получаем готовую строку
 def ready_string name
@@ -58,6 +58,18 @@ def ready_string name
         ready = only_comma ready
     end
     return ready
+end
+
+client = Mysql2::Client.new(:host => "db09", :username => "aglazkov", :password => "v4WmZip2K67J6Iq7NXC", :database => "applicant_tests")
+
+results = client.query('SELECT id, candidate_office_name FROM hle_dev_test_alexey_glazkov')
+
+results.each do |row|
+    defolt = row["candidate_office_name"]
+    finish = ready_string defolt
+    sentence = "The candidate is running for the #{finish} office." 
+    parcel = "UPDATE applicant_tests SET clean_name = '#{client.escape(finish)}', sentence = '#{client.escape(sentence)}' WHERE id = #{row['id']}"
+    client.query parcel
 end
 
 
