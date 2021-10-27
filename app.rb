@@ -1,4 +1,4 @@
-require 'mysq12'
+require 'mysql2'
 
 #hh = {name: "Village Clerk/East Hazel Crest", name: "Mayor/Posen", name: "School Board Rep", name:  "Twp Hwy Commissioner/Grafton Twp",
  #   name: "County Recorder/Bond County", name: "County Sheriff/Kankakee County", name: "State Representative 13th District",
@@ -35,16 +35,16 @@ def slash_only sentence
 end
 
 #Если имеется сокращения: Twp, Hwy, Highway highway  and Hwy hwy
-#def transformation sentence
- #   example = {"Twp" => "Township", "Hwy" => "Highway", "Highway highway" => "Highway", "Hwy hwy" => "Highway" }
-#
- #   example.each_key |key| do
-  #      if sentence.include?(key)
-   #         ready = sentence.gsub(key, example[key])
-    #        return ready
-   # #    end
-  #  end  
-#end
+def transformation sentence
+    example = {"Twp" => "Township", "Hwy" => "Highway", "Highway highway" => "Highway", "Hwy hwy" => "Highway" }
+    ready = sentence.strip
+    example.each do |key, value|
+        if sentence.include?(key)
+            ready = sentence.gsub!(key, value)
+       end 
+    end
+    return ready
+end
 
 #Получаем готовую строку
 def ready_string name
@@ -60,7 +60,7 @@ def ready_string name
     return ready
 end
 
-client = Mysql2::Client.new(:host => "db09", :username => "aglazkov", :password => "v4WmZip2K67J6Iq7NXC", :database => "applicant_tests")
+client = Mysql2::Client.new(:host => "db09", :username => "loki", :password => "v4WmZip2K67J6Iq7NXC", :database => "applicant_tests.hle_dev_test_alexey_glazkov")
 
 results = client.query('SELECT id, candidate_office_name FROM hle_dev_test_alexey_glazkov')
 
