@@ -54,12 +54,13 @@ end
 
 
 #Получаем готовую строку
-def ready_string(sentence)
-    #Удалим точки есди перед ними нет цифр
-    ready = sentence.gsub(/(?<=[^\d])\./,"")
-                   .gsub(/,\//, '/') #Форматирование неправильной строки State's Attorney,/Greene County
+def ready_string(sentence) 
+    ready = sentence.gsub(/(?<=[^\d])\./,"")  #Удалим точки есди перед ними нет цифр
+    ready = ready.gsub(/,\//, '/')            #Форматирование неправильной строки (State's Attorney,/Greene County)
+    
     ready = transformation(ready)
 
+    #Проверка на все варианты строки( в том числе пустую)
     if ready.include?('/') && ready.include?(',')
         ready = slash_and_comma(ready)
     elsif ready.include?('/')
