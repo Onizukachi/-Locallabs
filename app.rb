@@ -10,14 +10,18 @@ end
 
 #Если имеется сокращения: Twp, Hwy, Highway highway  and Hwy hwy
 def transformation sentence
-    example = {"Twp" => "Township", "Hwy" => "Highway", "Highway highway" => "Highway", "Hwy hwy" => "Highway" }
-    ready = sentence.strip
-    example.each do |key, value|
-        if sentence.include?(key)
-            ready = sentence.gsub(key, value)
-       end 
-    end
-    return ready
+    example = {'Twp' => 'Township', 'Hwy' => 'Highway', "Highway highway" => "Highway", "Hwy hwy" => "Highway" }
+    example.keys.each do |key|
+    r = Regexp.new(key + '\s')
+    sentence = sentence.gsub(r,  example[key] + ' ')
+
+    r = Regexp.new(key + '\.')
+    sentence = sentence.gsub(r,  example[key])
+
+    r = Regexp.new(key + '$')
+    sentence = sentence.gsub(r,  example[key])
+  end
+  return sentence
 end
 
 #Если запятая и слеш
